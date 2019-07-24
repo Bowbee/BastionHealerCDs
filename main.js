@@ -6,7 +6,9 @@ var orderBoss = 0;
 var textEditing = false;
 var delButtonMO = false;
 
-var sheetID = "6sXlvOryoYGA7Azg";
+var sheetID = "";
+
+var apiIP = "http://165.22.211.186:5000";
 
 var ajaxRequest = new XMLHttpRequest();
 
@@ -659,11 +661,11 @@ $(document).ready(function () {
     $mvl.offset({ left: e.pageX });
   });
 });
-var socket = io.connect('http://127.0.0.1:5000');
+var socket = io.connect(apiIP);
 
 
 function sendUpdate(){
-  ajaxRequest.open("POST", "http://127.0.0.1:5000/api/1/update/"+sheetID);
+  ajaxRequest.open("POST", apiIP+"/api/1/update/"+sheetID);
   ajaxRequest.setRequestHeader("Content-Type", "application/json");
   ajaxRequest.send(JSON.stringify(data));
 }
@@ -689,8 +691,37 @@ function getUpdate(){
       }
     }
   }
-  ajaxRequest.open("GET", "http://127.0.0.1:5000/api/1/get/"+sheetID, true);
+  console.log(sheetID);
+  if(sheetID != null){
+    ajaxRequest.open("GET", apiIP+"/api/1/get/"+sheetID, true);
+    ajaxRequest.send();
+  }
+}
+
+function getNewID(){
+  console.log("NEWID");
+  ajaxRequest.onreadystatechange = function(){
+    console.log("Ready state changed!");
+    if(ajaxRequest.readyState == 4){
+      if(ajaxRequest.status == 200){
+        if(ajaxRequest.response.length > 1){
+          console.log("JSON Recieved");
+          var jsonObj = JSON.parse(ajaxRequest.response);
+          console.log(jsonObj);
+          sheetID = jsonObj[1];
+          console.log("CHANGED ID:",sheetID);
+          document.location.search = "="+sheetID;
+        }
+        
+      }
+      else{
+        console.log("Status error: " + ajaxRequest.status);
+      }
+    }
+  }
+  ajaxRequest.open("GET", apiIP+"/api/1/newID", false);
   ajaxRequest.send();
+
 }
 
 
@@ -713,15 +744,27 @@ function stopTimer(){
 
 var timer = null;
 
+
+
+
 document.addEventListener("DOMContentLoaded", function(event) { 
   displayList = document.getElementById("list");
   scaleImg = document.getElementById("scale");
   delButton = document.getElementById("pipDelete");
   delButton.addEventListener("mouseenter",delMO);
   delButton.addEventListener("mouseleave", delLV)
+  var id = window.location.search;
+  id = id.substr(2);
+  if(id.length <= 5){
+    getNewID();
+  }
+  else{
+    sheetID = id;
+  }
+  console.log(id);
   $mvl = $("#mvl");
   getUpdate();
-  timer = window.setInterval(getUpdate, 1000);
+  //timer = window.setInterval(getUpdate, 1000);
 
 });
 

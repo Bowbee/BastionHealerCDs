@@ -16,19 +16,24 @@ socketio = SocketIO(app)
 def updateData(sheetID):
 	if request.is_json:
 		req = request.get_json()
-		with open('sheets/'+sheetID+'.json', 'w') as f:
-			json.dump(req, f)
+		try:
+			with open('sheets/'+sheetID+'.json', 'w') as f:
+				json.dump(req, f)
+			return '1', 200
+		except:
+			return '1', 200
 
-		broadcastToRoom(sheetID)
-		return '1', 200
 	return '1', 400
 
 
 @app.route('/api/1/get/<sheetID>')
 @cross_origin()
 def getData(sheetID):
-	with open('sheets/'+sheetID+".json") as jsonFile:
-		data = json.load(jsonFile)
+	try:
+		with open('sheets/'+sheetID+".json") as jsonFile:
+			data = json.load(jsonFile)
+	except:
+		data = []
 
 	print("Data:")
 	print(jsonify(data))
@@ -38,7 +43,8 @@ def getData(sheetID):
 @app.route('/api/1/newID')
 @cross_origin()
 def generateID():
-	return ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _ in range(16))
+	rtStr = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _ in range(16))
+	return jsonify("result",rtStr)
 
 
 def messageRecieved(methods=['GET','POST']):
