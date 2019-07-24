@@ -1,0 +1,24 @@
+boss1 = {
+  name:"Queen Azshara",
+  colour:"#888888",
+  pinned: false,
+  order: null,
+  icon: "test.png",
+  abilities: [],
+};
+ab1 = {
+  text:"Test Ability",
+  icon:"test.ico",
+  colour:"#888888",
+  pinned: false,
+  order: null,
+  pips: [],
+
+};
+pip1 = {
+  colour:"#888888",
+  length:60,
+  timeStart:10,
+  cooldown:20,
+  showCD: true,
+};

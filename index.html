@@ -1,0 +1,304 @@
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+        <script src="main.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css"></script>
+
+    </head>
+    <body class="bg-dark">
+        <div id="myModal" class="modal " tabindex="-1" role="dialog">
+                <div class="modal-dialog " role="document">
+                    <div class="modal-content bg-dark text-light">
+                    <div class="modal-header">
+                        <div class="row justify-content-center d-block mx-auto">
+                            <button id="modBtnBoss" onClick="modalBossClick()" class="btn btn-default px-2 m-1 mr-3 modButton">Boss</button>
+                            <button id="modBtnPlayer" onClick="modalPlayerClick()" class="btn btn-default px-2 m-1 ml-3 modButton">Player</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="addModal" class="row">
+                            <div id="modName" class="input-group mb-3 px-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text text-light bg-dark" id="inputGroup">Name</span>
+                                </div>
+                                <input type="text" class="form-control bg-dark text-light">
+                            </div>
+
+                            <div id="modClass" class="input-group mb-3 d-none px-4">
+                                <div class="input-group-prepend text-light bg-dark">
+                                    <label class="input-group-text text-light bg-dark" for="inputGroupSelect01">Class</label>
+                                </div>
+                                <select class="custom-select bg-dark text-light" id="inputGroupSelect01">
+                                    <option selected>Choose...</option>
+                                    <option value="1">Death Knight</option>
+                                    <option value="2">Demon Hunter</option>
+                                    <option value="3">Druid</option>
+                                    <option value="4">Hunter</option>
+                                    <option value="5">Mage</option>
+                                    <option value="6">Monk</option>
+                                    <option value="7">Paladin</option>
+                                    <option value="8">Priest</option>
+                                    <option value="9">Rogue</option>
+                                    <option value="10">Shaman</option>
+                                    <option value="11">Warlock</option>
+                                    <option value="12">Warrior</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick="modalCancel()" type="button" class="btn btn-danger mr-auto" data-dismiss="modal">Cancel</button>
+                        <button onClick="modalAdd()" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="bossModal" class="modal " tabindex="-1" role="dialog">
+                <div class="modal-dialog " role="document">
+                    <div class="modal-content bg-dark text-light">
+                    <div class="modal-header my-0">
+                        <div class="row justify-content-center d-block mx-auto">
+                            <h3>Add Ability</h3>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="bossAddModal" class="row">
+                            <div id="bModName" class="input-group px-4 mb-0">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text text-light bg-dark" id="inputGroup">Name</span>
+                                </div>
+                                <input type="text" class="form-control bg-dark text-light">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick="bossModalCancel()" type="button" class="btn btn-danger mr-auto" data-dismiss="modal">Cancel</button>
+                        <button onClick="bossModalAdd()" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="pipModal" class="modal " tabindex="-1" role="dialog">
+                <div class="modal-dialog " role="document">
+                    <div class="modal-content bg-dark text-light">
+                    <div class="modal-header my-0">
+                        <div class="row justify-content-center d-block mx-auto">
+                            <h3>Add Pip</h3>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="pipAddModal" class="row p-2">
+                            <div class="col-6 m-0 p-0">
+                                <div id="bModName" class="input-group px-4 mb-0">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-light bg-dark" id="inputGroup">Duration</span>
+                                    </div>
+                                    <input id="pipDuraM" type="text" placeholder="MM" class="form-control bg-dark text-light">
+                                    <input id="pipDuraS" type="text" placeholder="SS" class="form-control bg-dark text-light">
+                                </div>
+                            </div>
+                            <div class="col-6 m-0 p-0">
+                                <div id="bModName" class="input-group px-4 mb-0">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-light bg-dark" id="inputGroup">CD</span>
+                                    </div>
+                                    <input id="pipCDM" type="text" placeholder="MM" class="form-control bg-dark text-light">
+                                    <input id="pipCDS" type="text" placeholder="SS" class="form-control bg-dark text-light">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pipAddModal2" class="row p-2 justify-content-center">
+
+                            <div class="col-7 m-0 p-0 ">
+                                <div id="bModName" class="input-group px-4 mb-0">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-light bg-dark" id="inputGroup">Start Time</span>
+                                    </div>
+                                    <input id="pipSTM" type="text" placeholder="MM" class="form-control bg-dark text-light">
+                                    <input id="pipSTS" type="text" placeholder="SS" class="form-control bg-dark text-light">
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick="pipModalCancel()" type="button" class="btn btn-danger mr-auto" data-dismiss="modal">Cancel</button>
+                        <button onClick="pipModalAdd()" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="add" class="" onClick="addModal()"><i class="fas fa-plus"></i></button>
+        <button id="pipDelete" style="display:none" class="btn btn-sm btn-danger px-1 p-0 m-0">X</button>
+        <div id="list" class="container-fluid bg-dark">
+                <div class="vl"></div>
+                <div class="vl1"></div>
+                <div class="vl2"></div>
+                <div class="vl3"></div>
+                <div class="vl4"></div>
+                <div class="vl5"></div>
+                <div class="vl6"></div>
+                <div class="vl7"></div>
+                <div class="vl8"></div>
+                <div class="vl9"></div>
+                <div class="vl10"></div>
+                <div class="vl11"></div>
+                <div class="vl12"></div>
+                <div class="vl13"></div>
+                <div class="vl14"></div>
+                <div class="vl15"></div>
+                <div class="vl16"></div>
+                <div class="vl17"></div>
+                <div class="vl18"></div>
+                <div class="vl19"></div>
+                <div class="vl20"></div>
+                <div class="vl21"></div>
+                <div class="vl22"></div>
+                <div class="vl23"></div>
+                <div class="vl24"></div>
+                <div id="mvl" class="mvl"></div>
+
+                <div id="-1" class="row piprows pinned transparent bbox">
+                    <div id="scaleDiv" class="col m-0 p-0">
+                        <figure id="scaleF"><img id="scale" src="scale1.png" /></figure>
+                    </div>
+                    
+                </div>
+                <div id="0" class="row piprows bbox"></div>
+
+        </div>
+        <div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#303437">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+            <div id="placeholder" class="row align-items-center piprows">
+                <div class="name abilityName row justify-content-end align-items-center text-light" style="background-color:#383b3d">
+                    <p class="p-0 m-0 pr-2"></p>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+</html>

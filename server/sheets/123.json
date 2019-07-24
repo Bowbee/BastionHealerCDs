@@ -1,0 +1,1 @@
+[{"name": "Queen Poopyface", "colour": "#888888", "pinned": false, "order": 0, "icon": "test.png", "abilities": [{"text": "Test Ability", "icon": "test.ico", "colour": "#888888", "pinned": false, "order": 0, "pips": [{"colour": "#888888", "length": 60, "timeStart": 10, "cooldown": 20, "showCD": true}]}]}]
